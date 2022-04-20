@@ -73,7 +73,7 @@ def check_response(response):
     if type(homeworks) is not list:
         raise TypeError('"homeworks" не являеться списком')
     return homeworks
-    
+
 
 def parse_status(homework):
     """Информация о конкретной домашней работе, статус этой работы."""
@@ -119,21 +119,24 @@ def main():
     """Основная логика работы бота."""
     try:
         check_token = check_tokens()
-        if check_token == False:
+        if check_token is False:
             raise check_tokens_exception
     except check_tokens_exception as error:
-        logger.critical(f'отсутствуют обязательные переменные окружения ошибка:{error}')
-    try:    
+        logger.critical(f'отсутствуют переменные окружения: {error}')
+    try:
         bot = telegram.Bot(token=TELEGRAM_TOKEN)
     except Exception as error:
-        logger.error(f'bot не запустился ошибка:{error}')   
+        logger.error(f'bot не запустился ошибка:{error}')
     current_timestamp = int(time.time()) - ONE_MONTH
     while True:
         try:
             homework_status = get_homeworks_status(bot, current_timestamp)
             time.sleep(RETRY_TIME)
             current_timestamp = int(time.time()) - ONE_MONTH
-            compared_homework_status = get_homeworks_status(bot, current_timestamp)
+            compared_homework_status = get_homeworks_status(
+                bot,
+                current_timestamp
+            )
             if compared_homework_status != homework_status:
                 send_message(bot, compared_homework_status)
             else:
