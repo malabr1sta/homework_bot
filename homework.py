@@ -108,13 +108,6 @@ def get_homeworks_status(bot, current_timestamp):
     return homework_status
 
 
-def func_exception(bot, message):
-    """Фцнкция для формирования сообщения при исключений."""
-    logger.error(message)
-    send_message(bot, message)
-    time.sleep(RETRY_TIME)
-
-
 def main():
     """Основная логика работы бота."""
     try:
@@ -142,21 +135,11 @@ def main():
             else:
                 logger.debug('в ответе новых нет статусов')
             time.sleep(RETRY_TIME)
-        except get_api_answer_exception as error:
-            message = f'API не отвечает: {error}'
-            func_exception(bot, message)
-        except TypeError as error:
-            message = f'не корректный ответ API: {error}'
-            func_exception(bot, message)
-        except parse_status_exception as error:
-            message = f'не удалост получить статус домашней работы: {error}'
-            func_exception(bot, message)
-        except KeyError as error:
-            message = f'не коректный ключ : {error}'
-            func_exception(bot, message)
         except Exception as error:
             message = f'Сбой в работе программы: {error}'
-            func_exception(bot, message)
+            logger.error(message)
+            send_message(bot, message)
+            time.sleep(RETRY_TIME)
 
 
 if __name__ == '__main__':
