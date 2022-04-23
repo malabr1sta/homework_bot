@@ -2,14 +2,14 @@ import logging
 import os
 import sys
 import time
+from http import HTTPStatus
 from logging.handlers import RotatingFileHandler
 
 import requests
 import telegram
 from dotenv import load_dotenv
 
-from exception import GetApiAnswerException, BotMessageException
-from http import HTTPStatus
+from exception import BotMessageException, GetApiAnswerException
 
 load_dotenv()
 
